@@ -1,5 +1,5 @@
 '''Testing Home page'''
-from api import app
+from app import app
 
 def test_home():
     '''Test the return of the Home page'''
