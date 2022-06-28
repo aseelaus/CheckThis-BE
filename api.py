@@ -9,11 +9,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+#Provide some very basic test URL
 @app.route('/')
-def hello_world():
+def home():
+    '''returns a simple string to test routing'''
     return 'Feels like home!'
 
-#Register Blueprints#
+#Register Blueprints
 app.register_blueprint(TaskDefinition_bp)
 
 #Run App
