@@ -1,5 +1,5 @@
 '''Testing TaskDefinition'''
-from app import app
+from checkthis import app
 
 def test_task_definition_bp():
     '''Test the TaskDefinition Blueprint route'''

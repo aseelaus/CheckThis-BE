@@ -1,6 +1,5 @@
 '''Models'''
-
-from app import db
+from checkthis import db
 
 class TaskDefinition(db.Model):
     '''Class TaskDefinition'''

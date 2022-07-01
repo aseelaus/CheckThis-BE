@@ -1,5 +1,5 @@
 '''Testing Home page'''
-from app import app
+from checkthis import app
 
 def test_home():
     '''Test the return of the Home page'''
