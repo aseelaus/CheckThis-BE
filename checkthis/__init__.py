@@ -10,14 +10,15 @@ def create_app(database_uri):
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # TODO push context like in test-util and create db below
+    app.app_context().push()
 
-    # init DB
+    # init DB and Schema
     db.init_app(app)
-    # db.create_all()
     ma.init_app(app)
 
+    # register models and create corresponding tables
     from checkthis.models import ChecklistDefinition, TaskDefinition
+    db.create_all()
 
     # Register Blueprints
     from checkthis.API.ChecklistDefinitions import checklist_definition_bp
