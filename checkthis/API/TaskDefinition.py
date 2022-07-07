@@ -1,6 +1,6 @@
 from flask import Blueprint, request, Response
 from checkthis.models import TaskDefinition, task_definitions_schema, task_definition_schema
-from checkthis import db
+from checkthis.models import db
 
 # Blueprint Creation. Note the URL_Prefix!
 task_definition_bp = Blueprint(name='task_definition_blueprint', import_name=__name__, url_prefix='/TaskDefinitions')

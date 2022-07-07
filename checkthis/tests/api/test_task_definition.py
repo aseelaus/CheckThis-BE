@@ -1,5 +1,5 @@
 """Testing TaskDefinition"""
-from checkthis import app
+from run import app
 
 
 def test_task_definition_bp_hello():
