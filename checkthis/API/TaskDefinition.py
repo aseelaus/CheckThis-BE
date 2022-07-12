@@ -12,6 +12,8 @@ def hw2():
     return 'Hello from the other side!'
 
 
+# TODO for all routes: find a better way to query json, what if request.json is not compliant with the model?
+
 @task_definition_bp.route('/', methods=['GET', 'POST'])
 def base():
     if request.method == 'GET':
@@ -30,13 +32,23 @@ def base():
         return Response(status=405)
 
 
-@task_definition_bp.route('/<task_definition_id>/', methods=['GET'])
+@task_definition_bp.route('/<task_definition_id>/', methods=['GET', 'PUT', 'DELETE'])
 def specific(task_definition_id):
     if request.method == 'GET':
         task_definition = TaskDefinition.query.get(task_definition_id)
-        return task_definition_schema.dump(task_definition)
+        return Response(task_definition_schema.dumps(task_definition), status=200, mimetype="application/json")
     if request.method == 'PUT':
-        # TODO implement
-        return Response(status=405)
+        task_definition = TaskDefinition.query.get(task_definition_id) #TODO handle object not found
+        json = request.json
+        task_definition.title = json["title"]
+        task_definition.checklist_definition_id = json["checklist_definition_id"] #TODO handle nonexistant checklist_definition
+        task_definition.description = json["description"]
+        db.session.commit()
+        return Response(task_definition_schema.dumps(task_definition), status=200, mimetype="application/json")
+    if request.method == 'DELETE':
+        task_definition = TaskDefinition.query.get(task_definition_id)
+        db.session.delete(task_definition)
+        db.session.commit()
+        return Response(status=200)
     else:
         return Response(status=405)
