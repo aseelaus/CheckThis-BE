@@ -124,10 +124,11 @@ def test_crud():
 
     # ACT
     delete_response = delete(app=app, task_definition_id=td_id)
+    assert delete_response.status_code == 200
+    assert delete_response.json is None
 
     # ASSERT
     get_response = get_by_id(app=app, task_definition_id=td_id)
-    assert delete_response.status_code == 200
-    assert delete_response.json is None
+    assert get_response.json == {}
 
     test_util.teardown()

@@ -34,17 +34,24 @@ def base():
         return Response(status=405)
 
 
-@checklist_definition_bp.route('/<checklist_definition_id>/', methods=['GET', 'PUT'])
+@checklist_definition_bp.route('/<checklist_definition_id>/', methods=['GET', 'PUT', 'DELETE'])
 def specific(checklist_definition_id):
     if request.method == 'GET':
         checklist_def = ChecklistDefinition.query.get(checklist_definition_id)
         return Response(checklist_definition_schema.dumps(checklist_def),
                         status=200,
                         mimetype="application/json")
-
     if request.method == 'PUT':
-        # TODO implement
-        return Response('not yet implemented', status=501)
-
+        checklist_definition = ChecklistDefinition.query.get(checklist_definition_id) #TODO handle object not found
+        json = request.json
+        checklist_definition.title = json["title"]
+        checklist_definition.description = json["description"]
+        db.session.commit()
+        return Response(checklist_definition_schema.dumps(checklist_definition), status=200, mimetype="application/json")
+    if request.method == 'DELETE':
+        checklist_definition = ChecklistDefinition.query.get(checklist_definition_id)
+        db.session.delete(checklist_definition)
+        db.session.commit()
+        return Response(status=200)
     else:
         return Response(status=405)
