@@ -12,5 +12,5 @@ def setup():
 
 
 def teardown():
-    db.session.remove()
     db.drop_all()
+    db.session.remove()

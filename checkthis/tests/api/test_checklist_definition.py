@@ -36,27 +36,16 @@ def put(app, checklist_definition_id, title, description):
         "description": description
     }
 
-    return app.test_client().put('/ChecklistDefinitions/' + str(checklist_definition_id) + '/', data=json.dumps(put_body),
+    return app.test_client().put('/ChecklistDefinitions/' + str(checklist_definition_id) + '/',
+                                 data=json.dumps(put_body),
                                  headers=put_headers)
 
 
-def delete(app, task_definition_id):
-    return app.test_client().delete('/ChecklistDefinitions/' + str(task_definition_id) + '/')
+def delete(app, checklist_definition_id):
+    return app.test_client().delete('/ChecklistDefinitions/' + str(checklist_definition_id) + '/')
 
 
 # TESTS START HERE
-
-
-def test_checklist_definition_bp_hello():
-    """Test the ChecklistDefinition Blueprint route"""
-    app = test_util.setup()
-
-    response = app.test_client().get('/ChecklistDefinitions/hello')
-
-    assert response.status_code == 200
-    assert response.data.decode('utf-8') == 'Hello from the other side!'
-
-    test_util.teardown()
 
 
 def test_crud():
@@ -118,14 +107,51 @@ def test_crud():
     # ARRANGE
 
     # ACT
-    delete_response = delete(app=app, task_definition_id=cd_id)
+    delete_response = delete(app=app, checklist_definition_id=cd_id)
 
     # ASSERT
     assert delete_response.status_code == 200
     assert delete_response.json is None
 
     get_response = get_by_id(app=app, checklist_definition_id=cd_id)
-    assert get_response.status_code == 200
-    assert get_response.json == {}
+    assert get_response.status_code == 404
+    assert get_response.json is None
+
+    test_util.teardown()
+
+
+def test_object_not_found_rsp():
+    app = test_util.setup()
+
+    ### get by id ###
+    # ARRANGE
+    nonexistent_id = 500
+
+    # ACT
+    get_response = get_by_id(app=app,
+                             checklist_definition_id=nonexistent_id)
+
+    # ASSERT
+    assert get_response.status_code == 404
+
+    ### put ###
+    # ARRANGE
+    # ACT
+    put_response = put(app=app,
+                       checklist_definition_id=123,
+                       title='some_title',
+                       description='some_descr')
+
+    # ASSERT
+    assert put_response.status_code == 404
+
+    ### delete ###
+    # ARRANGE
+    # ACT
+    delete_response = delete(app=app,
+                             checklist_definition_id=nonexistent_id)
+
+    # ASSERT
+    assert delete_response.status_code == 404
 
     test_util.teardown()
