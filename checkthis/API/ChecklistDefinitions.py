@@ -53,6 +53,7 @@ def specific(checklist_definition_id):
                         status=200,
                         mimetype=_mimetype_json)
     if request.method == 'DELETE':
+        """Deletes the object and all its related TaskDefinitions"""
         checklist_definition = ChecklistDefinition.query.get(checklist_definition_id)
         if checklist_definition is None:
             return Response(status=404)
